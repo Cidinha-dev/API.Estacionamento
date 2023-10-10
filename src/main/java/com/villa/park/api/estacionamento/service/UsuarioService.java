@@ -2,6 +2,7 @@ package com.villa.park.api.estacionamento.service;
 
 
 import com.villa.park.api.estacionamento.entity.Usuario;
+import com.villa.park.api.estacionamento.exception.UsernameUniqueViolationException;
 import com.villa.park.api.estacionamento.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,17 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        try {
+            return usuarioRepository.save(usuario);
+
+        }catch (org.springframework.dao.DataIntegrityViolationException ex){
+
+            throw new UsernameUniqueViolationException(String.format("Username {%s} já cadastrado",usuario.getUsername()));
+        }
+
     }
+
+
 
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
