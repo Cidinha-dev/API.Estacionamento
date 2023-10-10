@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
-    
+
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErroMessage> entityNotFoundException(RuntimeException ex,HttpServletRequest request){
