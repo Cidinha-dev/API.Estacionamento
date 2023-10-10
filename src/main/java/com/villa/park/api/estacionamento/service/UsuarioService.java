@@ -2,6 +2,7 @@ package com.villa.park.api.estacionamento.service;
 
 
 import com.villa.park.api.estacionamento.entity.Usuario;
+import com.villa.park.api.estacionamento.exception.EntityNotFoundException;
 import com.villa.park.api.estacionamento.exception.UsernameUniqueViolationException;
 import com.villa.park.api.estacionamento.repository.UsuarioRepository;
 
@@ -37,7 +38,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Usuário não encontrado.")
+                () -> new EntityNotFoundException(String.format("Usuário id= %s não encontrado.",id))
         );
     }
 
