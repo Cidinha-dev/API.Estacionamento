@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
-
-
+    
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErroMessage> entityNotFoundException(RuntimeException ex,HttpServletRequest request){
@@ -43,7 +42,6 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErroMessage> MethodArgumentNotValidException(MethodArgumentNotValidException ex,
                                                                        HttpServletRequest request,
                                                                        BindingResult result){
-
         log.error("Api Error - ",ex);
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
