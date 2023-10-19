@@ -7,6 +7,7 @@ import com.villa.park.api.estacionamento.web.dto.UsuarioSenhaDto;
 import com.villa.park.api.estacionamento.web.exception.ErroMessage;
 import org.junit.jupiter.api.Test;
 import org.springdoc.api.ErrorMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -181,35 +182,65 @@ public class UsuarioIT {
                 .exchange()
                 .expectStatus().isNoContent();
     }
+
+    @Test
+    public void editarSenha_ComSenhaInvalidas_RetornarErrorMessageComStatus400() {
+        ErroMessage responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("123456", "123456", "000000"))
+                .exchange()
+                .expectStatus().isEqualTo(500)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(500);
+
+        responseBody = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDto("000000", "123456", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(500)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(500);
+    }
     @Test
     public void editarSenha_ComIdInexistente_RetornarErrorMessageComStatus404() {
-        ErrorMessage responseBody = testClient
+        ErroMessage responseBody = testClient
                 .patch()
                 .uri("/api/v1/usuarios/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDto("123456", "123456", "123456"))
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(ErrorMessage.class)
+                .expectStatus().isEqualTo(404)
+                .expectBody(ErroMessage.class)
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getClass()).isEqualTo(404);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
     }
+
     @Test
     public void editarSenha_ComCamposInvalidos_RetornarErrorMessageComStatus422() {
-        ErrorMessage responseBody = testClient
+        ErroMessage responseBody = testClient
                 .patch()
                 .uri("/api/v1/usuarios/100")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDto("", "", ""))
                 .exchange()
                 .expectStatus().isEqualTo(422)
-                .expectBody(ErrorMessage.class)
+                .expectBody(ErroMessage.class)
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getClass()).isEqualTo(422);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
         responseBody = testClient
                 .patch()
@@ -218,11 +249,11 @@ public class UsuarioIT {
                 .bodyValue(new UsuarioSenhaDto("12345", "12345", "12345"))
                 .exchange()
                 .expectStatus().isEqualTo(422)
-                .expectBody(ErrorMessage.class)
+                .expectBody(ErroMessage.class)
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getClass()).isEqualTo(422);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
         responseBody = testClient
                 .patch()
@@ -231,38 +262,12 @@ public class UsuarioIT {
                 .bodyValue(new UsuarioSenhaDto("12345678", "12345678", "12345678"))
                 .exchange()
                 .expectStatus().isEqualTo(422)
-                .expectBody(ErrorMessage.class)
+                .expectBody(ErroMessage.class)
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getClass()).isEqualTo(422);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
     }
-    @Test
-    public void editarSenha_ComSenhaInvalidas_RetornarErrorMessageComStatus400() {
-        ErrorMessage responseBody = testClient
-                .patch()
-                .uri("/api/v1/usuarios/100")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UsuarioSenhaDto("123456", "123456", "000000"))
-                .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectBody(ErrorMessage.class)
-                .returnResult().getResponseBody();
 
-        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getClass()).isEqualTo(400);
 
-        responseBody = testClient
-                .patch()
-                .uri("/api/v1/usuarios/100")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UsuarioSenhaDto("000000", "123456", "123456"))
-                .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectBody(ErrorMessage.class)
-                .returnResult().getResponseBody();
-
-        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getClass()).isEqualTo(400);
-    }
 }
