@@ -2,11 +2,13 @@ package com.villa.park.api.estacionamento.web.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+
+
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Getter
+@Setter
 public class UsuarioResponseDto {
 
     private Long id;

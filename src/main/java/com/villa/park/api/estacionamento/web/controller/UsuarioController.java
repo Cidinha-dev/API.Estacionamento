@@ -67,6 +67,8 @@ public class UsuarioController {
                     @ApiResponse(responseCode = "400",description = "Senha não confere ",
                             content = @Content(mediaType="application/json",schema = @Schema(implementation = ErroMessage.class))),
                     @ApiResponse(responseCode = "404",description = "Recurso não encontrado",
+                            content = @Content(mediaType="application/json",schema = @Schema(implementation = ErroMessage.class))),
+                    @ApiResponse(responseCode = "422",description = "Campos inválidos ou mal formatados",
                             content = @Content(mediaType="application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @PatchMapping("/{id}")
